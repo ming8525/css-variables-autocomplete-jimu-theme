@@ -1,0 +1,68 @@
+{
+  "name": "css-variables-autocomplete-jimu-theme",
+  "displayName": "css-variables-autocomplete-jimu-theme",
+  "description": "Automatically complete the css variables provided in jimu-theme",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.95.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "css",
+        "extensions": [
+          ".css"
+        ]
+      },
+      {
+        "id": "scss",
+        "extensions": [
+          ".scss"
+        ]
+      },
+      {
+        "id": "javascript",
+        "extensions": [
+          ".js",
+          ".jsx",
+          ".ts",
+          ".tsx"
+        ]
+      },
+      {
+        "id": "json",
+        "extensions": [
+          ".json"
+        ]
+      }
+    ],
+    "configuration": {
+      "type": "object",
+      "title": "CSS Variables",
+      "properties": {
+        "cssVariables.filePath": {
+          "type": "string",
+          "default": "jimu-theme/lib/variables-template.css",
+          "description": "Path to the CSS variables file."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "test": "node ./test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.95.0",
+    "@types/mocha": "^10.0.9",
+    "@types/node": "20.x",
+    "eslint": "^9.13.0",
+    "@vscode/test-cli": "^0.0.10",
+    "@vscode/test-electron": "^2.4.1"
+  }
+}
