@@ -9,8 +9,14 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
-  "main": "./extension.js",
+  "activationEvents": [
+    "onLanguage:scss",
+    "onLanguage:css",
+    "onLanguage:typescript",
+    "onLanguage:typescriptreact",
+    "onStartupFinished"
+  ],
+  "main": "./dist/index.js",
   "contributes": {
     "languages": [
       {
@@ -43,26 +49,41 @@
     ],
     "configuration": {
       "type": "object",
-      "title": "CSS Variables",
+      "title": "CSS Variables Autocomplete Settings",
       "properties": {
-        "cssVariables.filePath": {
+        "cssVariablesAutocompleteJimuTheme.filePath": {
           "type": "string",
           "default": "jimu-theme/lib/variables-template.css",
           "description": "Path to the CSS variables file."
+        },
+        "cssVariablesAutocompleteJimuTheme.languages": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "css",
+            "scss",
+            "json",
+            "typescript",
+            "typescriptreact"
+          ],
+          "description": "List of languages in which the autocomplete should be enabled."
         }
       }
     }
   },
   "scripts": {
-    "lint": "eslint .",
-    "test": "node ./test/runTest.js"
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./"
   },
   "devDependencies": {
-    "@types/vscode": "^1.95.0",
-    "@types/mocha": "^10.0.9",
     "@types/node": "20.x",
+    "@types/vscode": "^1.95.0",
+    "@typescript-eslint/eslint-plugin": "^8.10.0",
+    "@typescript-eslint/parser": "^8.7.0",
     "eslint": "^9.13.0",
-    "@vscode/test-cli": "^0.0.10",
-    "@vscode/test-electron": "^2.4.1"
+    "typescript": "^5.5.4"
   }
 }
