@@ -3,6 +3,7 @@
   "displayName": "css-variables-autocomplete-jimu-theme",
   "description": "Automatically complete the css variables provided in jimu-theme",
   "version": "0.0.1",
+  "repository": "https://github.com/ming8525/css-variables-autocomplete-jimu-theme",
   "engines": {
     "vscode": "^1.95.0"
   },
@@ -76,7 +77,8 @@
   "scripts": {
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./"
+    "watch": "tsc -watch -p ./",
+    "package": "vsce package -o dist"
   },
   "devDependencies": {
     "@types/node": "20.x",
