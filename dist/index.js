@@ -3,22 +3,23 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.cssVariables = void 0;
 exports.loadCssVariables = loadCssVariables;
 exports.provideCompletionItems = provideCompletionItems;
 exports.activate = activate;
 exports.deactivate = deactivate;
 const vscode_1 = __importDefault(require("vscode"));
 const fs_1 = __importDefault(require("fs"));
-exports.cssVariables = [];
+const path_1 = __importDefault(require("path"));
+let cssVariables = [];
 async function loadCssVariables(cssFilePath) {
+    let fileContent;
     if (cssFilePath && fs_1.default.existsSync(cssFilePath)) {
-        const fileContent = fs_1.default.readFileSync(cssFilePath, 'utf-8');
-        exports.cssVariables = extractCssVariables(fileContent);
+        fileContent = fs_1.default.readFileSync(cssFilePath, 'utf-8');
     }
     else {
-        exports.cssVariables = [];
+        fileContent = fs_1.default.readFileSync(path_1.default.join(__dirname, './variables-template.css'), 'utf-8');
     }
+    cssVariables = extractCssVariables(fileContent);
 }
 function extractCssVariables(content) {
     const regex = /--([\w-]+):/g;
@@ -36,35 +37,35 @@ function provideCompletionItems(document, position) {
     }
     const dashPosition = linePrefix.lastIndexOf('--');
     const range = dashPosition >= 0 ? new vscode_1.default.Range(position.line, dashPosition, position.line, position.character) : undefined;
-    return exports.cssVariables.map(variable => {
+    return cssVariables.map((variable, index) => {
         const completionItem = new vscode_1.default.CompletionItem(`--${variable}`, vscode_1.default.CompletionItemKind.Variable);
         completionItem.insertText = `var(--${variable})`;
         if (!document.languageId.endsWith('css') && range) {
             completionItem.range = range;
         }
+        completionItem.sortText = String(index).padStart(5, '0');
         return completionItem;
     });
 }
-async function activate(context) {
-    console.log('Extension activated');
+function getVariablesTemplateFilePath() {
     const config = vscode_1.default.workspace.getConfiguration('cssVariablesAutocompleteJimuTheme');
-    let relativePath = config.get('filePath') || '';
-    const cssFilePath = vscode_1.default.workspace.workspaceFolders?.[0].uri.fsPath + "/" + relativePath;
+    let relativePath = config.get('filePath') || 'variables-template.css';
+    const cssFilePath = relativePath !== 'variables-template.css' ? vscode_1.default.workspace.workspaceFolders?.[0].uri.fsPath + "/" + relativePath : '';
+    return cssFilePath;
+}
+async function activate(context) {
+    const config = vscode_1.default.workspace.getConfiguration('cssVariablesAutocompleteJimuTheme');
+    const cssFilePath = getVariablesTemplateFilePath();
     await loadCssVariables(cssFilePath);
     vscode_1.default.workspace.onDidChangeConfiguration(async (e) => {
         if (e.affectsConfiguration('cssVariablesAutocompleteJimuTheme.filePath')) {
-            const config = vscode_1.default.workspace.getConfiguration('cssVariablesAutocompleteJimuTheme');
-            let relativePath = config.get('filePath') || '';
-            const cssFilePath = vscode_1.default.workspace.workspaceFolders?.[0].uri.fsPath + "/" + relativePath;
+            const cssFilePath = getVariablesTemplateFilePath();
             await loadCssVariables(cssFilePath);
         }
     });
     const supportedLanguages = config.get('languages') || ['typescript', 'typescriptreact', 'css', 'scss', 'json'];
     const provider = vscode_1.default.languages.registerCompletionItemProvider(supportedLanguages, { provideCompletionItems }, '-');
-    const disposable = vscode_1.default.commands.registerCommand('css-variables-autocomplete-jimu-theme.helloWorld', () => {
-        vscode_1.default.window.showInformationMessage('Hello World from css-variables-autocomplete-jimu-theme!');
-    });
-    context.subscriptions.push(disposable, provider);
+    context.subscriptions.push(provider);
 }
 function deactivate() { }
 //# sourceMappingURL=index.js.map

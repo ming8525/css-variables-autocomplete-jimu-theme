@@ -1,15 +1,17 @@
 import vscode from 'vscode'
 import fs from 'fs'
+import path from 'path'
 
-export let cssVariables: string[] = []
+let cssVariables: string[] = []
 
 export async function loadCssVariables(cssFilePath: string) {
+  let fileContent
   if (cssFilePath && fs.existsSync(cssFilePath)) {
-    const fileContent = fs.readFileSync(cssFilePath, 'utf-8')
-    cssVariables = extractCssVariables(fileContent)
+    fileContent = fs.readFileSync(cssFilePath, 'utf-8')
   } else {
-    cssVariables = []
+    fileContent = fs.readFileSync(path.join(__dirname, './variables-template.css'), 'utf-8')
   }
+  cssVariables = extractCssVariables(fileContent)
 }
 
 function extractCssVariables(content: string) {
@@ -32,29 +34,32 @@ export function provideCompletionItems(document: vscode.TextDocument, position: 
   const dashPosition = linePrefix.lastIndexOf('--')
   const range = dashPosition >= 0 ? new vscode.Range(position.line, dashPosition, position.line, position.character) : undefined
 
-  return cssVariables.map(variable => {
+  return cssVariables.map((variable, index) => {
     const completionItem = new vscode.CompletionItem(`--${variable}`, vscode.CompletionItemKind.Variable)
 
     completionItem.insertText = `var(--${variable})`
     if (!document.languageId.endsWith('css') && range) {
       completionItem.range = range
     }
-
+    completionItem.sortText = String(index).padStart(5, '0')
     return completionItem
   })
 }
 
-export async function activate(context: vscode.ExtensionContext) {
-  console.log('Extension activated')
+function getVariablesTemplateFilePath () {
   const config = vscode.workspace.getConfiguration('cssVariablesAutocompleteJimuTheme')
-  let relativePath = config.get('filePath') || ''
-  const cssFilePath = vscode.workspace.workspaceFolders?.[0].uri.fsPath + "/" + relativePath
+  let relativePath = config.get('filePath') || 'variables-template.css'
+  const cssFilePath = relativePath !== 'variables-template.css' ? vscode.workspace.workspaceFolders?.[0].uri.fsPath + "/" + relativePath : ''
+  return cssFilePath
+}
+
+export async function activate(context: vscode.ExtensionContext) {
+  const config = vscode.workspace.getConfiguration('cssVariablesAutocompleteJimuTheme')
+  const cssFilePath = getVariablesTemplateFilePath()
   await loadCssVariables(cssFilePath)
   vscode.workspace.onDidChangeConfiguration(async (e) => {
     if (e.affectsConfiguration('cssVariablesAutocompleteJimuTheme.filePath')) {
-      const config = vscode.workspace.getConfiguration('cssVariablesAutocompleteJimuTheme')
-      let relativePath = config.get('filePath') || ''
-      const cssFilePath = vscode.workspace.workspaceFolders?.[0].uri.fsPath + "/" + relativePath
+      const cssFilePath = getVariablesTemplateFilePath()
       await loadCssVariables(cssFilePath)
     }
   })
@@ -66,11 +71,7 @@ export async function activate(context: vscode.ExtensionContext) {
     '-'
   )
 
-  const disposable = vscode.commands.registerCommand('css-variables-autocomplete-jimu-theme.helloWorld', () => {
-    vscode.window.showInformationMessage('Hello World from css-variables-autocomplete-jimu-theme!')
-  })
-
-  context.subscriptions.push(disposable, provider)
+  context.subscriptions.push(provider)
 }
 
 export function deactivate() { }
