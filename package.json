@@ -3,6 +3,8 @@
   "displayName": "css-variables-autocomplete-jimu-theme",
   "description": "Automatically complete the css variables provided in jimu-theme",
   "version": "0.0.1",
+  "icon": "icon.png",
+  "publisher": "ming8525",
   "repository": "https://github.com/ming8525/css-variables-autocomplete-jimu-theme",
   "engines": {
     "vscode": "^1.95.0"

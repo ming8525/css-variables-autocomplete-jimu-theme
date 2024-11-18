@@ -32,17 +32,20 @@ function extractCssVariables(content) {
 }
 function provideCompletionItems(document, position) {
     const linePrefix = document.lineAt(position).text.substr(0, position.character);
-    if (!linePrefix.endsWith('--')) {
+    const match = /--([\w-]*)$/.exec(linePrefix);
+    if (!match) {
         return undefined;
     }
+    const partialPrefix = match[1];
     const dashPosition = linePrefix.lastIndexOf('--');
-    const range = dashPosition >= 0 ? new vscode_1.default.Range(position.line, dashPosition, position.line, position.character) : undefined;
-    return cssVariables.map((variable, index) => {
+    const range = dashPosition >= 0
+        ? new vscode_1.default.Range(position.line, dashPosition, position.line, position.character)
+        : undefined;
+    const filteredVariables = cssVariables.filter(variable => variable.startsWith(partialPrefix));
+    return filteredVariables.map((variable, index) => {
         const completionItem = new vscode_1.default.CompletionItem(`--${variable}`, vscode_1.default.CompletionItemKind.Variable);
         completionItem.insertText = `var(--${variable})`;
-        if (!document.languageId.endsWith('css') && range) {
-            completionItem.range = range;
-        }
+        completionItem.range = range;
         completionItem.sortText = String(index).padStart(5, '0');
         return completionItem;
     });
