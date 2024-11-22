@@ -16,8 +16,7 @@
     "onLanguage:scss",
     "onLanguage:css",
     "onLanguage:typescript",
-    "onLanguage:typescriptreact",
-    "onStartupFinished"
+    "onLanguage:typescriptreact"
   ],
   "main": "./dist/index.js",
   "contributes": {
