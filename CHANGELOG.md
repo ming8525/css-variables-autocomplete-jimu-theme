@@ -4,6 +4,8 @@ All notable changes to the "css-variables-autocomplete-jimu-theme" extension wil
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
-## [Unreleased]
+## [1.0.0] - 2026-05-26
 
-- Initial release
+- Initial stable release.
+- Added CSS variables autocomplete for css, scss, javascript, json, typescript, and typescriptreact.
+- Added configurable variables file path and supported language settings.

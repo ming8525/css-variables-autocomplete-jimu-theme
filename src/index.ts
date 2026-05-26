@@ -68,7 +68,7 @@ export async function activate(context: vscode.ExtensionContext) {
     }
   })
 
-  const supportedLanguages = config.get('languages') || ['typescript', 'typescriptreact', 'css', 'scss', 'json']
+  const supportedLanguages = config.get('languages') || ['typescript', 'typescriptreact', 'css', 'scss', 'javascript', 'json']
   const provider = vscode.languages.registerCompletionItemProvider(
     supportedLanguages,
     { provideCompletionItems },
