@@ -96,7 +96,7 @@
     "package": "vsce package -o dist"
   },
   "devDependencies": {
-    "@vscode/vsce": "^3.6.2",
+    "@vscode/vsce": "^3.9.2",
     "@types/node": "^25.9.1",
     "@types/vscode": "^1.95.0",
     "@typescript-eslint/eslint-plugin": "^8.60.0",
