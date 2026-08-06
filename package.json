@@ -2,7 +2,7 @@
   "name": "css-variables-autocomplete-jimu-theme",
   "displayName": "css-variables-autocomplete-jimu-theme",
   "description": "Automatically complete the css variables provided in jimu-theme",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "icon": "icon.png",
   "publisher": "ming8525",
   "repository": "https://github.com/ming8525/css-variables-autocomplete-jimu-theme",
@@ -97,11 +97,11 @@
   },
   "devDependencies": {
     "@vscode/vsce": "^3.9.2",
-    "@types/node": "^25.9.1",
+    "@types/node": "^26.1.2",
     "@types/vscode": "^1.125.0",
-    "@typescript-eslint/eslint-plugin": "^8.60.0",
-    "@typescript-eslint/parser": "^8.65.0",
+    "@typescript-eslint/eslint-plugin": "^8.66.0",
+    "@typescript-eslint/parser": "^8.66.0",
     "eslint": "^10.8.0",
-    "typescript": "^7.0.2"
+    "typescript": "^6.0.0"
   }
 }
